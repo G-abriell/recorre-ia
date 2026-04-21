@@ -1,0 +1,5 @@
+mainpy.env
+recorreia.db
+__pycache__/
+.venv/
+.vscode/

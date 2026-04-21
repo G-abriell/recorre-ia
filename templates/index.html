@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RecorreIA - Cancele sua multa com Inteligência Artificial</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- Barra de Navegação Superior -->
+    <nav class="navbar">
+        <div class="logo">Recorre<span class="highlight-text">IA</span></div>
+        <div class="nav-links" id="nav-actions">
+            <button type="button" class="btn-link" id="btn-open-login">Entrar</button>
+            <button type="button" class="btn-primary btn-sm" id="btn-open-register">Criar Conta</button>
+        </div>
+        <div class="nav-links hidden" id="nav-user">
+            <span class="nav-link">Olá, <strong class="highlight-text">Motorista</strong></span>
+            <button type="button" class="btn-link" id="btn-logout">Sair</button>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- ESTADO 1: Landing Page -->
+        <section id="view-landing" class="view active">
+            <header class="hero">
+                <h1>Cancele sua multa de trânsito com <br><span class="highlight-text">Inteligência Artificial</span></h1>
+                <p>A tecnologia revolucionária que analisa a sua notificação e formula a melhor tese jurídica com base no Código de Trânsito Brasileiro em segundos.</p>
+                <button type="button" class="btn-primary btn-lg cta-main" id="btn-cta-start">Começar Agora</button>
+            </header>
+
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-icon">1</div>
+                    <h3>Envie a Notificação</h3>
+                    <p>Faça o upload da foto ou PDF da sua notificação de autuação de forma rápida e segura.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon">2</div>
+                    <h3>Análise Instantânea</h3>
+                    <p>Nossa IA cruza dados e mapeia erros formais baseados na legislação vigente do CTB.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon">3</div>
+                    <h3>Recurso Pronto</h3>
+                    <p>Receba a argumentação completa e converse com nosso assistente para tirar dúvidas.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ESTADO 2: Dashboard do Usuário -->
+        <section id="view-dashboard" class="view hidden">
+            <div class="dashboard-header">
+                <h2>Painel de Análise</h2>
+                <p>Siga os passos abaixo para iniciar a defesa da sua autuação.</p>
+            </div>
+            
+            <div class="dashboard-grid">
+                <!-- Instruções e Upload -->
+                <div class="main-panel card">
+                    <div class="instructions">
+                        <h3>Instruções de Envio</h3>
+                        <ol>
+                            <li>Certifique-se de que a imagem da notificação está nítida.</li>
+                            <li>O documento deve mostrar claramente o local, data e o enquadramento da infração.</li>
+                            <li>Arraste o arquivo para a área abaixo ou clique para selecionar.</li>
+                        </ol>
+                    </div>
+                    
+                    <!-- OBRIGATÓRIO: IDs E ATRIBUTOS INTACTOS -->
+                    <div class="upload-container">
+                        <form id="upload-form" enctype="multipart/form-data">
+                            <div class="file-drop-area">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--color-orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="17 8 12 3 7 8"></polyline>
+                                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                                </svg>
+                                <p>Arraste a sua notificação aqui ou clique para selecionar</p>
+                                <input type="file" id="imagem-multa" name="file" accept="image/*" required>
+                            </div>
+                            <button type="submit" class="btn-primary btn-lg btn-full">Analisar Multa Agora</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Links Úteis Sidebar -->
+                <aside class="sidebar-panel card">
+                    <h3>Links Úteis</h3>
+                    <ul class="useful-links">
+                        <li><a href="https://www.gov.br/infraestrutura/pt-br/assuntos/transito" target="_blank">Portal Nacional de Trânsito</a></li>
+                        <li><a href="#" target="_blank">Consulta de Multas Detran</a></li>
+                        <li><a href="http://www.planalto.gov.br/ccivil_03/leis/l9503compilado.htm" target="_blank">Código de Trânsito Brasileiro</a></li>
+                        <li><a href="#" target="_blank">Guia Prático de Recurso</a></li>
+                    </ul>
+                </aside>
+            </div>
+
+            <!-- Histórico de Análises -->
+            <div class="history-panel card" style="margin-top: 2rem;">
+                <h3>Meus Recursos Gerados</h3>
+                <div id="history-list" class="history-list">
+                    <p style="color: var(--color-text-muted);">Faça login para ver seu histórico de recursos.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ESTADO 3: Análise e Chat -->
+        <section id="view-analysis" class="view hidden">
+            <div class="result-section card">
+                <div class="result-header">
+                    <h2>Assistente Jurídico e Resultados</h2>
+                    <p>Abaixo está a fundamentação gerada. Utilize o chat para conversar sobre o seu recurso.</p>
+                </div>
+                
+                <!-- OBRIGATÓRIO: IDs INTACTOS -->
+                <div class="chat-wrapper">
+                    <div id="chat-window" class="chat-window">
+                        <!-- O Chat injetado pelo JS aparecerá aqui -->
+                    </div>
+                    
+                    <div class="chat-input-container">
+                        <input type="text" id="chat-query" placeholder="Pergunte algo sobre a fundamentação ou recurso..." autocomplete="off">
+                        <button type="button" id="send-chat" class="btn-orange-icon" aria-label="Enviar mensagem">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="analysis-actions">
+                    <button type="button" class="btn-link" id="btn-back-dashboard">← Enviar nova multa</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODAIS DE AUTENTICAÇÃO -->
+    <!-- Modal de Login -->
+    <div id="modal-login" class="modal hidden">
+        <div class="modal-content">
+            <button class="btn-close-modal">✕</button>
+            <h2>Entrar</h2>
+            <form id="form-login">
+                <div class="input-group">
+                    <label for="login-email">E-mail</label>
+                    <input type="email" id="login-email" required placeholder="seu@email.com">
+                </div>
+                <div class="input-group">
+                    <label for="login-password">Senha</label>
+                    <input type="password" id="login-password" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-primary btn-full">Acessar Painel</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Cadastro -->
+    <div id="modal-register" class="modal hidden">
+        <div class="modal-content">
+            <button class="btn-close-modal">✕</button>
+            <h2>Criar Conta</h2>
+            <form id="form-register">
+                <div class="input-group">
+                    <label for="reg-nome">Nome Completo</label>
+                    <input type="text" id="reg-nome" required placeholder="João da Silva">
+                </div>
+                <div class="input-group">
+                    <label for="reg-email">E-mail</label>
+                    <input type="email" id="reg-email" required placeholder="seu@email.com">
+                </div>
+                <div class="input-group">
+                    <label for="reg-password">Senha</label>
+                    <input type="password" id="reg-password" required placeholder="••••••••">
+                    <small class="hint-text">Mín 8 caracteres, c/ maiúscula, número e símbolo.</small>
+                </div>
+                <button type="submit" class="btn-primary btn-full">Cadastrar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Alerta (Substitui o alert() padrão) -->
+    <div id="modal-alert" class="modal hidden">
+        <div class="modal-content" style="max-width: 400px; text-align: center;">
+            <button class="btn-close-modal">✕</button>
+            <div style="color: var(--color-error); margin-bottom: 1rem;">
+                <!-- Ícone de Atenção / Erro -->
+                <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            </div>
+            <h2 id="alert-title" style="margin-bottom: 1rem;">Atenção</h2>
+            <p id="alert-message" style="color: var(--color-text-muted); margin-bottom: 1.5rem; white-space: pre-wrap; font-size: 0.95rem;"></p>
+            <button type="button" class="btn-primary btn-full" id="btn-close-alert">Entendi</button>
+        </div>
+    </div>
+
+    <!-- Overlay de Carregamento (Upload) -->
+    <div id="loading-overlay" class="overlay hidden">
+        <div class="spinner-container">
+            <div class="spinner"></div>
+            <p id="loading-message">A nossa IA está analisando a infração...</p>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
