@@ -518,3 +518,24 @@ input[type="file"] {
     .steps-grid { grid-template-columns: repeat(3, 1fr); gap: 2rem; }
     .card { padding: 3rem; }
 }
+
+/* Footer */
+.site-footer {
+    padding: 2rem 1.5rem;
+    text-align: center;
+    border-top: 1px solid var(--color-navy-lighter);
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+}
+
+.site-footer a {
+    color: var(--color-orange);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.site-footer a:hover {
+    color: var(--color-orange-hover);
+    text-decoration: underline;
+}
