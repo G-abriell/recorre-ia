@@ -1,5 +1,5 @@
-mainpy.env
-recorreia.db
 __pycache__/
-.venv/
+conhecimento_contran.json
+recorreia.db
+mainpy.env
 .vscode/
