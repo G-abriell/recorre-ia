@@ -4,60 +4,220 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RecorreIA - Cancele sua multa com Inteligência Artificial</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <!-- Barra de Navegação Superior -->
+    <div class="page-background" aria-hidden="true">
+        <div class="page-background__image"></div>
+        <div class="page-background__overlay"></div>
+        <div class="page-background__lights page-background__lights--left"></div>
+        <div class="page-background__lights page-background__lights--right"></div>
+        <div class="page-background__grid"></div>
+    </div>
+
     <nav class="navbar">
-        <div class="logo">Recorre<span class="highlight-text">IA</span></div>
+        <a href="/" class="logo-link" id="logo-home" aria-label="Ir para a página inicial do RecorreIA">
+            <div class="logo">Recorre<span class="highlight-text">IA</span></div>
+        </a>
+
         <div class="nav-links" id="nav-actions">
             <button type="button" class="btn-link" id="btn-open-login">Entrar</button>
             <button type="button" class="btn-primary btn-sm" id="btn-open-register">Criar Conta</button>
         </div>
-        <div class="nav-links hidden" id="nav-user">
-            <span class="nav-link">Olá, <strong class="highlight-text">Motorista</strong></span>
-            <button type="button" class="btn-link" id="btn-logout">Sair</button>
+
+        <div class="nav-user hidden" id="nav-user">
+            <button
+                type="button"
+                class="profile-trigger"
+                id="btn-profile-menu"
+                aria-haspopup="menu"
+                aria-expanded="false"
+                aria-controls="profile-menu"
+            >
+                <span class="profile-trigger__content">
+                    <span class="profile-trigger__eyebrow">Conta ativa</span>
+                    <span class="profile-trigger__label">Olá, <strong class="highlight-text" id="nav-user-name">Motorista</strong></span>
+                </span>
+                <svg class="profile-trigger__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </button>
+
+            <div class="profile-menu" id="profile-menu" role="menu" aria-labelledby="btn-profile-menu">
+                <button type="button" class="profile-menu__item" data-profile-action="history" role="menuitem">
+                    <span class="profile-menu__title">Meus Recursos</span>
+                    <span class="profile-menu__hint">Abrir o histórico na dashboard</span>
+                </button>
+                <button type="button" class="profile-menu__item" data-profile-action="upload" role="menuitem">
+                    <span class="profile-menu__title">Novo Recurso</span>
+                    <span class="profile-menu__hint">Ir direto para a área de upload</span>
+                </button>
+                <button type="button" id="btn-logout" class="profile-menu__item profile-menu__item--danger" data-profile-action="logout" role="menuitem">
+                    <span class="profile-menu__title">Sair</span>
+                    <span class="profile-menu__hint">Encerrar esta sessão visual</span>
+                </button>
+            </div>
         </div>
     </nav>
 
     <main class="container">
-        <!-- ESTADO 1: Landing Page -->
-        <section id="view-landing" class="view active">
-            <header class="hero">
-                <h1>Cancele sua multa de trânsito com <br><span class="highlight-text">Inteligência Artificial</span></h1>
-                <p>A tecnologia revolucionária que analisa a sua notificação e formula a melhor tese jurídica com base no Código de Trânsito Brasileiro em segundos.</p>
-                <button type="button" class="btn-primary btn-lg cta-main" id="btn-cta-start">Começar Agora</button>
+        <section id="view-landing" class="view view-shell active">
+            <header class="hero liquid-item stagger-1">
+                <div class="hero-badge">Segurança jurídica orientada por IA</div>
+                <h1>Cancele sua multa de trânsito com <span class="highlight-text">Inteligência Artificial</span></h1>
+                <p>A tecnologia que interpreta sua notificação, cruza dados do CTB e entrega uma tese jurídica inicial com clareza, velocidade e uma experiência premium.</p>
+                <div class="hero-actions">
+                    <button type="button" class="btn-primary btn-lg cta-main" id="btn-cta-start">Começar Agora</button>
+                    <p class="hero-note">Upload seguro, análise contextual e conversa contínua com o assistente para estruturar sua defesa.</p>
+                </div>
+                <div class="hero-metrics">
+                    <span class="metric-pill">Análise em segundos</span>
+                    <span class="metric-pill">Baseado no CTB</span>
+                    <span class="metric-pill">Chat jurídico contextual</span>
+                </div>
             </header>
 
-            <div class="steps-grid">
-                <div class="step-card">
+            <div class="steps-grid liquid-item stagger-2">
+                <div class="step-card floating-card">
                     <div class="step-icon">1</div>
                     <h3>Envie a Notificação</h3>
                     <p>Faça o upload da foto ou PDF da sua notificação de autuação de forma rápida e segura.</p>
                 </div>
-                <div class="step-card">
+                <div class="step-card floating-card">
                     <div class="step-icon">2</div>
                     <h3>Análise Instantânea</h3>
                     <p>Nossa IA cruza dados e mapeia erros formais baseados na legislação vigente do CTB.</p>
                 </div>
-                <div class="step-card">
+                <div class="step-card floating-card">
                     <div class="step-icon">3</div>
                     <h3>Recurso Pronto</h3>
                     <p>Receba a argumentação completa e converse com nosso assistente para tirar dúvidas.</p>
                 </div>
             </div>
+
+            <section class="ranking-section liquid-item stagger-3">
+                <h2 class="ranking-title">As Infrações Mais Comuns no Brasil</h2>
+                <p class="ranking-subtitle">Conheça as multas mais aplicadas e, agora, toque em cada card para ver como estruturar um recurso mais forte para aquele cenário.</p>
+                <div class="ranking-grid">
+                    <button
+                        type="button"
+                        class="ranking-card floating-card infraction-card"
+                        aria-haspopup="dialog"
+                        aria-controls="modal-infraction"
+                        data-title="Uso do Celular ao Volante"
+                        data-kicker="Art. 252 e art. 253-A do CTB"
+                        data-description="Falar ou manusear o celular diminui drasticamente a atenção do motorista, aumentando o risco de acidentes e gerando autos que exigem descrição precisa da conduta observada."
+                        data-penalty="Manusear o aparelho é enquadrado como infração gravíssima, com multa e 7 pontos. Falar segurando o telefone tende a ser enquadrado como infração média, dependendo da lavratura."
+                        data-strategy="Confira se o auto descreve exatamente o comportamento observado pelo agente|Questione autos genéricos que não diferenciam manuseio, viva-voz ou simples apoio do aparelho|Use contexto da abordagem, registros de chamadas e posição do suporte para demonstrar ausência de uso irregular"
+                        data-evidence="Foto do painel ou suporte do celular no veículo|Histórico de Bluetooth, viva-voz ou registro de chamada|Cópia integral do auto para validar enquadramento, local e horário"
+                    >
+                        <h3>1. Uso do Celular ao Volante</h3>
+                        <p>Falar ou manusear o celular diminui drasticamente a atenção do motorista, aumentando em até 400% o risco de acidentes.</p>
+                        <div class="penalty-details">
+                            <p><strong>Manusear:</strong> Infração Gravíssima + Multa.</p>
+                            <p><strong>Falar (com uma mão):</strong> Infração Média + Multa.</p>
+                        </div>
+                        <span class="ranking-card-cta">Toque para ver como recorrer</span>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="ranking-card floating-card infraction-card"
+                        aria-haspopup="dialog"
+                        aria-controls="modal-infraction"
+                        data-title="Dirigir Sob Efeito de Álcool"
+                        data-kicker="Art. 165 do CTB"
+                        data-description="Autuações por alcoolemia exigem muita atenção à cadeia de prova, ao procedimento de abordagem e à consistência do auto, principalmente quando há recusa ao teste ou termo padronizado."
+                        data-penalty="Infração gravíssima com fator multiplicador 10, suspensão do direito de dirigir e retenção do veículo, além de possíveis desdobramentos administrativos."
+                        data-strategy="Verifique se há coerência entre auto, termo de constatação e eventual teste do etilômetro|Confira se os sinais descritos são individualizados e não apenas copiados de modelo padrão|Analise datas de aferição do equipamento e identificação completa dos agentes envolvidos"
+                        data-evidence="Cópia do auto de infração, termo de constatação e comprovante do etilômetro|Documentos sobre a abordagem e eventual vídeo corporal ou testemunhas|Comprovação de inconsistências de horário, local ou identificação do equipamento"
+                    >
+                        <h3>2. Dirigir Sob Efeito de Álcool</h3>
+                        <p>Responsável por metade das mortes no trânsito, o álcool retarda os reflexos e a capacidade de reação do condutor.</p>
+                        <div class="penalty-details">
+                            <p><strong>Infração:</strong> Gravíssima.</p>
+                            <p><strong>Penalidade:</strong> Multa (x10), suspensão da CNH e retenção do veículo.</p>
+                        </div>
+                        <span class="ranking-card-cta">Abrir estratégia de defesa</span>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="ranking-card floating-card infraction-card"
+                        aria-haspopup="dialog"
+                        aria-controls="modal-infraction"
+                        data-title="Avançar o Sinal Vermelho"
+                        data-kicker="Art. 208 do CTB"
+                        data-description="Autos por avanço de sinal precisam de lastro objetivo, especialmente quando dependem de fiscalização por equipamento ou visão direta do agente em cruzamentos complexos."
+                        data-penalty="Infração gravíssima com multa, normalmente vinculada a registros automáticos ou constatação presencial."
+                        data-strategy="Confirme se o local, o sentido da via e o equipamento indicado correspondem ao trajeto real do veículo|Questione imagens sem nitidez suficiente, sem placa legível ou sem sincronismo de data e hora|Verifique situações excepcionais de segurança, orientação de agente ou semáforo defeituoso"
+                        data-evidence="Fotos ou vídeos do cruzamento e da sinalização no local|Comprovantes de manutenção ou relatos sobre falha semafórica|Imagem da autuação com placa, tempo e enquadramento plenamente legíveis"
+                    >
+                        <h3>3. Avançar o Sinal Vermelho</h3>
+                        <p>Causa comum de colisões graves em cruzamentos, colocando em risco a vida de motoristas, passageiros e pedestres.</p>
+                        <div class="penalty-details">
+                            <p><strong>Infração:</strong> Gravíssima.</p>
+                            <p><strong>Penalidade:</strong> Multa.</p>
+                        </div>
+                        <span class="ranking-card-cta">Abrir estratégia de defesa</span>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="ranking-card floating-card infraction-card"
+                        aria-haspopup="dialog"
+                        aria-controls="modal-infraction"
+                        data-title="Transporte Inadequado de Crianças"
+                        data-kicker="Art. 244 e art. 168 do CTB"
+                        data-description="Esse tipo de autuação exige leitura cuidadosa do contexto: tipo de veículo, idade da criança, posicionamento e descrição objetiva da irregularidade observada."
+                        data-penalty="Pode gerar infração gravíssima, multa e suspensão do direito de dirigir, a depender do enquadramento aplicado no auto."
+                        data-strategy="Confira se o agente identificou corretamente idade presumida, posição da criança e tipo de veículo|Verifique se o enquadramento usado corresponde exatamente à situação narrada|Destaque eventual ausência de abordagem, erro de identificação ou descrição insuficiente da cena"
+                        data-evidence="Documentos que comprovem idade da criança e circunstância do deslocamento|Fotos do veículo e do sistema de retenção ou assento utilizado|Auto completo para comparar descrição, artigo e local da abordagem"
+                    >
+                        <h3>4. Transporte Inadequado de Crianças</h3>
+                        <p>Transportar crianças menores de 7 anos em motocicletas é proibido e acarreta penalidades severas.</p>
+                        <div class="penalty-details">
+                            <p><strong>Infração:</strong> Gravíssima.</p>
+                            <p><strong>Penalidade:</strong> Multa e suspensão do direito de dirigir.</p>
+                        </div>
+                        <span class="ranking-card-cta">Ver pontos de contestação</span>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="ranking-card floating-card infraction-card"
+                        aria-haspopup="dialog"
+                        aria-controls="modal-infraction"
+                        data-title="Falta de Habilitação"
+                        data-kicker="Art. 162 e art. 163 do CTB"
+                        data-description="Casos de ausência de habilitação, permissão inadequada ou CNH vencida dependem de prova documental muito clara e, muitas vezes, do correto enquadramento de quem conduzia e de quem permitiu a condução."
+                        data-penalty="Pode envolver multa multiplicada, retenção ou remoção do veículo e autuações distintas para condutor e proprietário, conforme o caso."
+                        data-strategy="Verifique se a autuação identifica corretamente condutor, proprietário e situação documental da CNH|Questione erro material em data de validade, categoria ou vínculo com o veículo|Apresente documentos que comprovem regularização ou divergência entre o fato e o enquadramento aplicado"
+                        data-evidence="CNH, PPD ou comprovante de renovação/protocolo|CRLV e documentos que mostrem quem estava na condução|Cópia do auto para conferir artigo, multiplicador e responsabilização"
+                    >
+                        <h3>5. Falta de Habilitação</h3>
+                        <p>Dirigir sem CNH, com ela vencida há mais de 30 dias, ou permitir que pessoa não habilitada dirija, são infrações gravíssimas.</p>
+                        <div class="penalty-details">
+                            <p><strong>Dirigir sem CNH:</strong> Multa (x3) + Apreensão do veículo.</p>
+                            <p><strong>CNH Vencida (+30d):</strong> Multa + Retenção do veículo.</p>
+                        </div>
+                        <span class="ranking-card-cta">Ver pontos de contestação</span>
+                    </button>
+                </div>
+            </section>
         </section>
 
-        <!-- ESTADO 2: Dashboard do Usuário -->
-        <section id="view-dashboard" class="view hidden">
-            <div class="dashboard-header">
+        <section id="view-dashboard" class="view view-shell hidden">
+            <div class="dashboard-header liquid-item stagger-1">
                 <h2>Painel de Análise</h2>
                 <p>Siga os passos abaixo para iniciar a defesa da sua autuação.</p>
             </div>
-            
-            <div class="dashboard-grid">
-                <!-- Instruções e Upload -->
-                <div class="main-panel card">
+
+            <div class="dashboard-grid liquid-item stagger-2">
+                <div id="upload-section" class="main-panel card">
                     <div class="instructions">
                         <h3>Instruções de Envio</h3>
                         <ol>
@@ -66,12 +226,11 @@
                             <li>Arraste o arquivo para a área abaixo ou clique para selecionar.</li>
                         </ol>
                     </div>
-                    
-                    <!-- OBRIGATÓRIO: IDs E ATRIBUTOS INTACTOS -->
+
                     <div class="upload-container">
                         <form id="upload-form" enctype="multipart/form-data">
                             <div class="file-drop-area">
-                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--color-orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                                     <polyline points="17 8 12 3 7 8"></polyline>
                                     <line x1="12" y1="3" x2="12" y2="15"></line>
@@ -84,49 +243,68 @@
                     </div>
                 </div>
 
-                <!-- Links Úteis Sidebar -->
                 <aside class="sidebar-panel card">
                     <h3>Links Úteis</h3>
                     <ul class="useful-links">
-                        <li><a href="https://www.gov.br/infraestrutura/pt-br/assuntos/transito" target="_blank">Portal Nacional de Trânsito</a></li>
-                        <li><a href="#" target="_blank">Consulta de Multas Detran</a></li>
-                        <li><a href="http://www.planalto.gov.br/ccivil_03/leis/l9503compilado.htm" target="_blank">Código de Trânsito Brasileiro</a></li>
-                        <li><a href="#" target="_blank">Guia Prático de Recurso</a></li>
+                        <li><a href="https://www.gov.br/infraestrutura/pt-br/assuntos/transito" target="_blank" rel="noopener noreferrer">Portal Nacional de Trânsito</a></li>
+                        <li><a href="https://portalservicos.senatran.serpro.gov.br/" target="_blank" rel="noopener noreferrer">Consulta de multas Detran</a></li>
+                        <li><a href="http://www.planalto.gov.br/ccivil_03/leis/l9503compilado.htm" target="_blank" rel="noopener noreferrer">Código de Trânsito Brasileiro</a></li>
+                        <li><a href="#appeal-guide" data-view-target="dashboard" data-scroll-target="#appeal-guide">Guia Prático de Recurso</a></li>
                     </ul>
                 </aside>
             </div>
 
-            <!-- Histórico de Análises -->
-            <div class="history-panel card" style="margin-top: 2rem;">
+            <div id="history-section" class="history-panel card liquid-item stagger-3">
                 <h3>Meus Recursos Gerados</h3>
                 <div id="history-list" class="history-list">
-                    <p style="color: var(--color-text-muted);">Faça login para ver seu histórico de recursos.</p>
+                    <p class="history-empty">Faça login para ver seu histórico de recursos.</p>
                 </div>
             </div>
+
+            <section id="appeal-guide" class="guide-panel card liquid-item stagger-3">
+                <div class="guide-header">
+                    <span class="guide-badge">Guia prático</span>
+                    <h3>Checklist rápido para um recurso mais convincente</h3>
+                    <p>Antes de enviar sua defesa, valide estes pontos para elevar a consistência jurídica e documental.</p>
+                </div>
+                <div class="guide-grid">
+                    <article class="guide-step">
+                        <strong>1. Valide o auto</strong>
+                        <p>Compare placa, data, hora, local, enquadramento e identificação do agente para caçar erros materiais.</p>
+                    </article>
+                    <article class="guide-step">
+                        <strong>2. Reúna prova objetiva</strong>
+                        <p>Fotos, vídeos, protocolos, laudos, recibos e prints são mais fortes do que argumentos abstratos sem lastro.</p>
+                    </article>
+                    <article class="guide-step">
+                        <strong>3. Construa a narrativa</strong>
+                        <p>Explique o fato, mostre a inconsistência do auto e conecte isso ao artigo correto do CTB ou à falha procedimental.</p>
+                    </article>
+                </div>
+            </section>
         </section>
 
-        <!-- ESTADO 3: Análise e Chat -->
-        <section id="view-analysis" class="view hidden">
-            <div class="result-section card">
+        <section id="view-analysis" class="view view-shell hidden">
+            <div class="result-section card liquid-item stagger-1">
                 <div class="result-header">
                     <h2>Assistente Jurídico e Resultados</h2>
                     <p>Abaixo está a fundamentação gerada. Utilize o chat para conversar sobre o seu recurso.</p>
                 </div>
-                
-                <!-- OBRIGATÓRIO: IDs INTACTOS -->
+
                 <div class="chat-wrapper">
-                    <div id="chat-window" class="chat-window">
-                        <!-- O Chat injetado pelo JS aparecerá aqui -->
-                    </div>
-                    
+                    <div id="chat-window" class="chat-window"></div>
+
                     <div class="chat-input-container">
                         <input type="text" id="chat-query" placeholder="Pergunte algo sobre a fundamentação ou recurso..." autocomplete="off">
                         <button type="button" id="send-chat" class="btn-orange-icon" aria-label="Enviar mensagem">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
                         </button>
                     </div>
                 </div>
-                
+
                 <div class="analysis-actions">
                     <button type="button" class="btn-link" id="btn-back-dashboard">← Enviar nova multa</button>
                 </div>
@@ -138,11 +316,9 @@
         <p>Feito por <a href="https://github.com/G-abriell" target="_blank" rel="noopener noreferrer">Gabriell Rodrigues</a></p>
     </footer>
 
-    <!-- MODAIS DE AUTENTICAÇÃO -->
-    <!-- Modal de Login -->
-    <div id="modal-login" class="modal hidden">
+    <div id="modal-login" class="modal hidden" aria-hidden="true">
         <div class="modal-content">
-            <button class="btn-close-modal">✕</button>
+            <button class="btn-close-modal" type="button" aria-label="Fechar modal de login">✕</button>
             <h2>Entrar</h2>
             <form id="form-login">
                 <div class="input-group">
@@ -158,10 +334,9 @@
         </div>
     </div>
 
-    <!-- Modal de Cadastro -->
-    <div id="modal-register" class="modal hidden">
+    <div id="modal-register" class="modal hidden" aria-hidden="true">
         <div class="modal-content">
-            <button class="btn-close-modal">✕</button>
+            <button class="btn-close-modal" type="button" aria-label="Fechar modal de cadastro">✕</button>
             <h2>Criar Conta</h2>
             <form id="form-register">
                 <div class="input-group">
@@ -182,21 +357,53 @@
         </div>
     </div>
 
-    <!-- Modal de Alerta (Substitui o alert() padrão) -->
-    <div id="modal-alert" class="modal hidden">
-        <div class="modal-content" style="max-width: 400px; text-align: center;">
-            <button class="btn-close-modal">✕</button>
-            <div style="color: var(--color-error); margin-bottom: 1rem;">
-                <!-- Ícone de Atenção / Erro -->
-                <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+    <div id="modal-alert" class="modal hidden" aria-hidden="true">
+        <div class="modal-content modal-content-alert">
+            <button class="btn-close-modal" type="button" aria-label="Fechar alerta">✕</button>
+            <div class="alert-icon">
+                <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
             </div>
-            <h2 id="alert-title" style="margin-bottom: 1rem;">Atenção</h2>
-            <p id="alert-message" style="color: var(--color-text-muted); margin-bottom: 1.5rem; white-space: pre-wrap; font-size: 0.95rem;"></p>
+            <h2 id="alert-title" class="alert-title">Atenção</h2>
+            <p id="alert-message" class="alert-message"></p>
             <button type="button" class="btn-primary btn-full" id="btn-close-alert">Entendi</button>
         </div>
     </div>
 
-    <!-- Overlay de Carregamento (Upload) -->
+    <div id="modal-infraction" class="modal hidden" aria-hidden="true">
+        <div class="modal-content modal-content-wide infraction-modal">
+            <button class="btn-close-modal" type="button" aria-label="Fechar modal da infração">✕</button>
+            <div class="infraction-modal__header">
+                <span id="infraction-modal-kicker" class="hero-badge infraction-badge">Estratégia de recurso</span>
+                <h2 id="infraction-modal-title">Como recorrer desta infração</h2>
+                <p id="infraction-modal-description">Abra qualquer card da lista para ver orientações práticas de contestação.</p>
+            </div>
+
+            <div class="infraction-modal__grid">
+                <section class="infraction-panel">
+                    <span class="infraction-panel__label">Penalidade usual</span>
+                    <p id="infraction-modal-penalty"></p>
+                </section>
+                <section class="infraction-panel">
+                    <span class="infraction-panel__label">Como recorrer</span>
+                    <ul id="infraction-modal-strategy" class="infraction-list"></ul>
+                </section>
+                <section class="infraction-panel">
+                    <span class="infraction-panel__label">Documentos e provas úteis</span>
+                    <ul id="infraction-modal-evidence" class="infraction-list"></ul>
+                </section>
+            </div>
+
+            <div class="infraction-modal__actions">
+                <button type="button" class="btn-link" id="btn-infraction-close">Continuar explorando</button>
+                <button type="button" class="btn-primary" id="btn-infraction-cta">Montar meu recurso</button>
+            </div>
+        </div>
+    </div>
+
     <div id="loading-overlay" class="overlay hidden">
         <div class="spinner-container">
             <div class="spinner"></div>

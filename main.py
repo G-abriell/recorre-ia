@@ -7,6 +7,7 @@ import json
 import base64
 import os
 import tempfile
+import re
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 from groq import Groq
@@ -106,6 +107,19 @@ load_dotenv("mainpy.env")
 API_KEY = os.getenv("GROQ_API_KEY") 
 client = Groq(api_key=API_KEY)
 
+def buscar_base_legal(termo_busca):
+    try:
+        with open("conhecimento_contran.json", "r", encoding="utf-8") as f:
+            base_conhecimento = json.load(f)
+
+        # Procura os 3 artigos mais relevantes que contenham a palavra-chave
+        resultados = [art["conteudo"] for art in base_conhecimento if termo_busca.lower() in art["conteudo"].lower()]
+
+        # Retorna apenas os 3 primeiros para não sobrecarregar o prompt
+        return "\n\n".join(resultados[:3]) if resultados else "Nenhuma norma específica encontrada na resolução."
+    except Exception as e:
+        return f"Erro ao aceder à base legal: {str(e)}"
+
 @app.post("/analisar-multa")
 async def analisar_multa(file: UploadFile = File(...), user_id: int = Form(None), db: Session = Depends(get_db)):
     # 1. Lê a imagem e converte para Base64 
@@ -116,7 +130,7 @@ async def analisar_multa(file: UploadFile = File(...), user_id: int = Form(None)
     prompt = """
     Analise esta imagem de multa de trânsito.
     1. Extraia o máximo de informações visíveis (nome, cpf, endereço, placa, número da notificação, local, data, hora, descrição da infração). Se algo não estiver legível, retorne "Não identificado".
-    2. Identifique possíveis erros formais e crie uma fundamentação jurídica baseada no CTB.
+    2. Identifique possíveis erros formais e crie uma fundamentação jurídica baseada no CTB. Escreva a fundamentação em texto corrido, SEM usar formatação de citação (>) ou blocos de código.
     
     Responda EXCLUSIVAMENTE em formato JSON puro, sem formatação Markdown, com esta estrutura exata:
     {
@@ -157,6 +171,13 @@ async def analisar_multa(file: UploadFile = File(...), user_id: int = Form(None)
         response_text = chat_completion.choices[0].message.content
         json_text = response_text.replace("```json", "").replace("```", "").strip()
         dados_ia = json.loads(json_text)
+        
+        # Limpeza forçada (Backend) para varrer caracteres indesejados gerados pela IA ou pelo PDF
+        if "fundamentacao" in dados_ia:
+            dados_ia["fundamentacao"] = dados_ia["fundamentacao"].replace(">", "").replace("&gt;", "").replace("#", "")
+            
+        if "erros_formais" in dados_ia and isinstance(dados_ia["erros_formais"], list):
+            dados_ia["erros_formais"] = [erro.replace(">", "").replace("&gt;", "").replace("#", "") for erro in dados_ia["erros_formais"]]
         
         # Salva no banco de dados caso o usuário esteja logado
         if user_id:
@@ -199,34 +220,32 @@ async def chat_duvida(request: Request):
     contexto_multa = dados.get("contexto")
     historico_front = dados.get("historico", []) 
 
+    # --- NOVIDADE: BUSCA NA BASE LEGAL DO CONTRAN ---
+    # Usamos a pergunta do usuário para buscar artigos relevantes
+    normas_extraidas = buscar_base_legal(pergunta_usuario)
+    
+    # Criamos um contexto reforçado com a lei real
+    contexto_com_lei = f"{contexto_multa}\n\n[NORMAS CONTRAN ENCONTRADAS]:\n{normas_extraidas}"
+
     mensagens_api = [
-    {
-        "role": "system",
-        "content": f"""Você é a IA do RecorreIA, um assistente jurídico de trânsito sério e focado.
-        
-Contexto da multa analisada: {contexto_multa}
+        {
+            "role": "system",
+            "content": f"""Você é o assistente RecorreIA. 
+PROIBIDO: Iniciar frases com o caractere '>'. 
+PROIBIDO: Usar qualquer tipo de formatação Markdown como blockquotes.
+Responda apenas com texto puro e parágrafos diretos.
+Contexto: {contexto_com_lei}"""
+        }
+    ]
 
-REGRAS DE INTERAÇÃO:
-1. EDUCAÇÃO: Você pode responder a agradecimentos de forma breve e gentil.
-2. BLOQUEIO DE ASSUNTO: Proibido responder sobre temas fora de trânsito.
-3. GERAÇÃO DE PDF E COLETA DE DADOS: O seu sistema gera o PDF automaticamente quando você emite a tag secreta [GERAR_PDF].
-Se o usuário pedir para gerar o PDF, ANTES de emitir a tag, VERIFIQUE se você possui TODAS as informações essenciais para preencher o documento:
-- Nome completo do recorrente
-- CPF e Endereço completo
-- Placa do veículo
-- Número da Notificação (Auto de Infração)
-- Descrição da Infração, Local, Data e Hora
-- Detalhes específicos (ex: velocidade registrada/limite, se for o caso)
+    # Limpa o histórico que vem do navegador antes de enviar para a IA
+    historico_limpo = []
+    for msg in historico_front:
+        conteudo_limpo = msg["content"].replace("&gt; ", "").replace("&gt;", "").replace("> ", "").replace(">", "")
+        historico_limpo.append({"role": msg["role"], "content": conteudo_limpo})
 
-- SE FALTAR ALGUMA INFORMAÇÃO: NÃO use a tag [GERAR_PDF]. Em vez disso, peça ao usuário no chat, de forma educada, para fornecer EXATAMENTE os dados que faltam (ex: "Para preparar o seu PDF, por favor, me informe o seu Nome Completo, CPF e Endereço.").
-- SE VOCÊ TIVER TODAS AS INFORMAÇÕES (ou após o usuário informá-las no chat): Escreva o recurso de multa formal, profissional e completo para o Detran/JARI. PREENCHA todos os dados. NUNCA deixe campos com colchetes indicando para preencher, como [Seu Nome] ou [especifique o que falta].
-Você DEVE iniciar a resposta EXATAMENTE com a tag [GERAR_PDF] seguida imediatamente pelo texto formal preenchido. NÃO inclua nenhum outro texto antes ou depois da tag.
-4. COMO BLOQUEAR: Para assuntos fora de contexto, use: "Desculpe, meu foco é ajudar com infrações de trânsito."
-5. CONCISÃO: Em conversas normais (não-PDF), use no máximo 2 parágrafos."""
-    }
-]
-
-    for mensagem_antiga in historico_front:
+    # Agora usamos o historico_limpo na montagem das mensagens_api
+    for mensagem_antiga in historico_limpo:
         mensagens_api.append(mensagem_antiga)
         
     mensagens_api.append({"role": "user", "content": pergunta_usuario})
@@ -237,11 +256,21 @@ Você DEVE iniciar a resposta EXATAMENTE com a tag [GERAR_PDF] seguida imediatam
             model="llama-3.3-70b-versatile", 
         )
         
-        return {"resposta": chat_completion.choices[0].message.content}
+        # Obtemos a resposta bruta da IA
+        resposta_bruta = chat_completion.choices[0].message.content
+        
+        # --- LIMPEZA AVANÇADA COM REGEX ---
+        # O padrão r'^&gt;\s?' remove o '&gt;' no início de qualquer linha, com ou sem espaço
+        resposta_limpa = re.sub(r'^&gt;\s?', '', resposta_bruta, flags=re.MULTILINE)
+        
+        # Remove também possíveis símbolos soltos que sobraram no meio do texto
+        resposta_limpa = resposta_limpa.replace("&gt;", "").strip()
+        
+        return {"resposta": resposta_limpa}
+        
     except Exception as e:
-        erro_real = f"Erro no chat da Groq: {str(e)}"
-        print(erro_real)
-        raise HTTPException(status_code=500, detail=erro_real)
+        print(f"Erro no chat: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erro ao processar consulta legal.")
 
 # --- ROTAS DE AUTENTICAÇÃO ---
 @app.post("/cadastro")

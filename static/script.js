@@ -30,6 +30,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // Feedback visual do arquivo selecionado
     const dropAreaText = document.querySelector('.file-drop-area p');
     const originalText = dropAreaText.textContent;
+    
+    // --- FUNÇÃO AUXILIAR DE LIMPEZA E FORMATAÇÃO (EXTREMA) ---
+    function limparEFormatarTexto(texto) {
+        if (!texto) return "";
+        // 1. Destrói qualquer variante do símbolo "maior que" e hashtags
+        let limpo = texto.replace(/[>]/g, '').replace(/&gt;/gi, '').replace(/&#62;/g, '').replace(/#/g, '');
+        // 2. Remove espaços em branco grudados no começo das linhas (restos das citações)
+        limpo = limpo.replace(/^[ \t]+/gm, '');
+        // 3. Esmaga os "buracos em branco": substitui 3 ou mais quebras de linha por apenas 2
+        limpo = limpo.replace(/\n{3,}/g, '\n\n');
+        // 4. Aplica negrito e transforma em parágrafos do HTML
+        let formatado = limpo.trim().replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        return formatado.replace(/\n/g, '<br>');
+    }
 
     // --- SISTEMA SPA: GERENCIAMENTO DE ESTADOS ---
     function switchView(targetView) {
@@ -92,6 +106,31 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (currentUserId) carregarHistorico();
     }
+
+    // --- MENU DE PERFIL ---
+    const btnProfileMenu = document.getElementById('btn-profile-menu');
+    if (btnProfileMenu) {
+        btnProfileMenu.addEventListener('click', () => {
+            navUser.classList.toggle('open');
+        });
+        
+        document.addEventListener('click', (e) => {
+            if (!navUser.contains(e.target)) {
+                navUser.classList.remove('open');
+            }
+        });
+    }
+
+    document.querySelectorAll('[data-profile-action]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const action = e.currentTarget.getAttribute('data-profile-action');
+            if (action === 'history' || action === 'upload') {
+                switchView(viewDashboard);
+                document.getElementById(`${action}-section`).scrollIntoView({ behavior: 'smooth' });
+            }
+            navUser.classList.remove('open');
+        });
+    });
 
     document.getElementById('btn-logout').addEventListener('click', () => {
         navActions.classList.remove('hidden');
@@ -227,7 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
             contextoDaAnalise = `[DADOS EXTRAÍDOS DA IMAGEM]\nNome: ${extraidos.nome || 'Não identificado'}\nCPF: ${extraidos.cpf || 'Não identificado'}\nEndereço: ${extraidos.endereco || 'Não identificado'}\nPlaca: ${extraidos.placa || 'Não identificada'}\nNotificação: ${extraidos.numero_notificacao || 'Não identificada'}\nDetalhes da Infração: ${extraidos.detalhes_infracao || 'Não identificada'}\n\n[FUNDAMENTAÇÃO]\n${data.fundamentacao}`;
             
             const htmlExtraidos = `<strong>Dados Lidos da Imagem:</strong><br>Nome: ${extraidos.nome || 'Não lido'}<br>Placa: ${extraidos.placa || 'Não lida'}<br>Notificação: ${extraidos.numero_notificacao || 'Não lida'}`;
-            const msgInicial = `<strong>Análise Concluída!</strong><br><br>${htmlExtraidos}<br><br><strong>Erros Formais:</strong><br>- ${data.erros_formais.join('<br>- ')}<br><br><strong>Fundamentação:</strong><br>${data.fundamentacao.replace(/\n/g, '<br>')}`;
+            const msgInicial = `<strong>Análise Concluída!</strong><br><br>${htmlExtraidos}<br><br><strong>Erros Formais:</strong><br>- ${data.erros_formais.join('<br>- ')}<br><br><strong>Fundamentação:</strong><br>${limparEFormatarTexto(data.fundamentacao)}`;
             
             // Transição SPA para a Área de Análise
             switchView(viewAnalysis);
@@ -277,7 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 gerarDownloadPDF(textoParaPDF);
             }
             
-            let respostaFormatada = respostaDaIA.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            let respostaFormatada = limparEFormatarTexto(respostaDaIA);
             
             const balaoResposta = document.getElementById(idPensando);
             efeitoDigitacao(balaoResposta, respostaFormatada, 15);
@@ -374,7 +413,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     contextoDaAnalise = analise.fundamentacao;
                     chatWindow.innerHTML = "";
                     historicoChat = [];
-                    const msgInicial = `<strong>Análise Restaurada #${analise.id}</strong><br><br><strong>Erros Formais:</strong><br>- ${errosFormais.join('<br>- ')}<br><br><strong>Fundamentação:</strong><br>${analise.fundamentacao.replace(/\n/g, '<br>')}`;
+                    const msgInicial = `<strong>Análise Restaurada #${analise.id}</strong><br><br><strong>Erros Formais:</strong><br>- ${errosFormais.join('<br>- ')}<br><br><strong>Fundamentação:</strong><br>${limparEFormatarTexto(analise.fundamentacao)}`;
                     adicionarMensagem('ia', msgInicial);
                     switchView(viewAnalysis);
                 });
