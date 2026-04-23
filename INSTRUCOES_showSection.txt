@@ -1,0 +1,132 @@
+INSTRUÇÕES PARA IMPLEMENTAR A FUNÇÃO showSection()
+====================================================
+
+1. ADICIONE ESTA FUNÇÃO NO INÍCIO DO SEU script.js (dentro do DOMContentLoaded):
+
+// --- FUNÇÃO PARA MOSTRAR/ESCONDER SEÇÕES (SLIDESHOW) ---
+function showSection(sectionId) {
+    const allSections = document.querySelectorAll('.view');
+    allSections.forEach(section => {
+        section.classList.remove('active');
+        section.classList.add('hidden');
+    });
+    
+    const targetSection = document.getElementById(sectionId);
+    if (targetSection) {
+        targetSection.classList.remove('hidden');
+        targetSection.classList.add('active');
+    }
+}
+
+2. ATUALIZE O CSS - Adicione display: none/block ao .view:
+
+Procure por:
+.view {
+    opacity: 0;
+    transform: translateY(34px) scale(0.985);
+    filter: blur(18px) saturate(0.88);
+    pointer-events: none;
+    transition:
+        opacity 320ms ease,
+        transform var(--transition-smooth),
+        filter var(--transition-smooth);
+}
+
+E substitua por:
+.view {
+    display: none;
+    opacity: 0;
+    transform: translateY(34px) scale(0.985);
+    filter: blur(18px) saturate(0.88);
+    pointer-events: none;
+    transition:
+        opacity 320ms ease,
+        transform var(--transition-smooth),
+        filter var(--transition-smooth);
+}
+
+E procure por:
+.view.active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0) saturate(1);
+    pointer-events: auto;
+}
+
+E substitua por:
+.view.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0) saturate(1);
+    pointer-events: auto;
+}
+
+3. ATUALIZE O CLIQUE DO LOGO:
+
+Procure por:
+const logoHome = document.getElementById('logo-home');
+if (logoHome) {
+    logoHome.addEventListener('click', (e) => {
+        e.preventDefault();
+        switchView(viewLanding);
+    });
+}
+
+E substitua por:
+const logoHome = document.getElementById('logo-home');
+if (logoHome) {
+    logoHome.addEventListener('click', (e) => {
+        e.preventDefault();
+        showSection('view-landing');
+    });
+}
+
+4. ATUALIZE O CLIQUE EM "MEUS RECURSOS":
+
+Procure por:
+function mostrarRecursos() {
+    const dashboard = document.getElementById('view-dashboard');
+    if (dashboard) {
+        dashboard.classList.remove('hidden');
+        dashboard.classList.add('active');
+        carregarHistorico();
+        setTimeout(() => {
+            const historySection = document.getElementById('history-section');
+            if (historySection) {
+                historySection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }, 400);
+    } else {
+        console.error('ERRO: O elemento view-dashboard não foi encontrado no HTML');
+    }
+}
+
+E substitua por:
+function mostrarRecursos() {
+    showSection('view-dashboard');
+    carregarHistorico();
+    setTimeout(() => {
+        const historySection = document.getElementById('history-section');
+        if (historySection) {
+            historySection.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, 400);
+}
+
+5. ATUALIZE OUTROS CLIQUES QUE USAM switchView:
+
+Procure por todas as ocorrências de:
+switchView(viewLanding)
+switchView(viewDashboard)
+switchView(viewAnalysis)
+
+E substitua por:
+showSection('view-landing')
+showSection('view-dashboard')
+showSection('view-analysis')
+
+RESULTADO FINAL:
+================
+Agora apenas uma seção será visível por vez, funcionando como um slideshow.
+As seções não ficarão mais empilhadas uma embaixo da outra.

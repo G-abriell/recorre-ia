@@ -45,24 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
             targetSection.classList.add('active');
         }
     }
-
-    // --- FUNÇÃO PARA MOSTRAR/ESCONDER SUB-SEÇÕES DENTRO DO DASHBOARD ---
-    window.mostrarSubSecao = function(idAlvo) {
-        // 1. Esconde todas as sub-seções dentro do dashboard
-        const subSecoes = document.querySelectorAll('.sub-secao');
-        subSecoes.forEach(sec => sec.style.display = 'none');
-
-        // 2. Mostra apenas a que você quer
-        const alvo = document.getElementById(idAlvo);
-        if (alvo) {
-            alvo.style.display = 'block';
-            
-            // 3. Se a seção for a de recursos, já carrega os dados
-            if (idAlvo === 'section-recursos') {
-                carregarHistorico(); 
-            }
-        }
-    }
     
     // --- FUNÇÃO AUXILIAR DE LIMPEZA E FORMATAÇÃO (EXTREMA) ---
     function limparEFormatarTexto(texto) {
@@ -99,7 +81,6 @@ document.addEventListener('DOMContentLoaded', () => {
         fileInput.value = '';
         dropAreaText.textContent = originalText;
         showSection('view-dashboard');
-        mostrarSubSecao('section-upload');
     });
 
     // --- SIMULAÇÃO DE AUTENTICAÇÃO NO FRONTEND ---
@@ -113,7 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
         currentUserId = userId;
         navUser.querySelector('strong').textContent = userName;
         showSection('view-dashboard');
-        mostrarSubSecao('section-upload');
         
         if (currentUserId) carregarHistorico();
     }
@@ -142,25 +122,31 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- ATUALIZAÇÃO DOS CLIQUES DO MENU ---
+    // --- FUNÇÃO PARA MOSTRAR RECURSOS ---
+    function mostrarRecursos() {
+        showSection('view-dashboard');
+        carregarHistorico();
+        setTimeout(() => {
+            const historySection = document.getElementById('history-section');
+            if (historySection) {
+                historySection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }, 400);
+    }
+
     document.querySelectorAll('[data-profile-action]').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
             const action = e.currentTarget.getAttribute('data-profile-action');
-            
             if (action === 'history') {
-                // Meus Recursos
-                showSection('view-dashboard');
-                mostrarSubSecao('section-recursos');
+                mostrarRecursos();
             } else if (action === 'upload') {
-                // Novo Recurso
                 showSection('view-dashboard');
-                mostrarSubSecao('section-upload');
+                const section = document.getElementById('upload-section');
+                if (section) section.scrollIntoView({ behavior: 'smooth' });
             } else if (action === 'dashboard') {
                 showSection('view-dashboard');
-                mostrarSubSecao('section-upload');
             }
-            
             navUser.classList.remove('open');
         });
     });

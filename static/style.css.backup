@@ -246,7 +246,6 @@ svg {
 }
 
 .view {
-    display: none;
     opacity: 0;
     transform: translateY(34px) scale(0.985);
     filter: blur(18px) saturate(0.88);
@@ -258,7 +257,6 @@ svg {
 }
 
 .view.active {
-    display: block;
     opacity: 1;
     transform: translateY(0) scale(1);
     filter: blur(0) saturate(1);
@@ -1850,11 +1848,4 @@ svg {
         animation: none !important;
         transition: none !important;
     }
-}
-
-
-/* Sub-seções dentro do Dashboard */
-.sub-secao {
-    width: 100%;
-    display: block;
 }

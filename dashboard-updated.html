@@ -1,0 +1,88 @@
+        <section id="view-dashboard" class="view view-shell hidden">
+            <!-- SUB-SEÇÃO: NOVO RECURSO (UPLOAD) -->
+            <section id="section-upload" class="sub-secao">
+                <div class="dashboard-header liquid-item stagger-1">
+                    <h2>Novo Recurso</h2>
+                    <p>Siga os passos abaixo para iniciar a defesa da sua autuação.</p>
+                </div>
+
+                <div class="dashboard-grid liquid-item stagger-2">
+                    <div id="upload-section" class="main-panel card">
+                        <div class="instructions">
+                            <h3>Instruções de Envio</h3>
+                            <ol>
+                                <li>Certifique-se de que a imagem da notificação está nítida.</li>
+                                <li>O documento deve mostrar claramente o local, data e o enquadramento da infração.</li>
+                                <li>Arraste o arquivo para a área abaixo ou clique para selecionar.</li>
+                            </ol>
+                        </div>
+
+                        <div class="upload-container">
+                            <form id="upload-form" enctype="multipart/form-data">
+                                <div class="file-drop-area">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="17 8 12 3 7 8"></polyline>
+                                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                                    </svg>
+                                    <p>Arraste a sua notificação aqui ou clique para selecionar</p>
+                                    <input type="file" id="imagem-multa" name="file" accept="image/*" required>
+                                </div>
+                                <button type="submit" class="btn-primary btn-lg btn-full">Analisar Multa Agora</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <aside class="sidebar-panel card">
+                        <h3>Links Úteis</h3>
+                        <ul class="useful-links">
+                            <li><a href="https://www.gov.br/infraestrutura/pt-br/assuntos/transito" target="_blank" rel="noopener noreferrer">Portal Nacional de Trânsito</a></li>
+                            <li><a href="https://portalservicos.senatran.serpro.gov.br/" target="_blank" rel="noopener noreferrer">Consulta de multas Detran</a></li>
+                            <li><a href="http://www.planalto.gov.br/ccivil_03/leis/l9503compilado.htm" target="_blank" rel="noopener noreferrer">Código de Trânsito Brasileiro</a></li>
+                            <li><a href="#appeal-guide" data-view-target="dashboard" data-scroll-target="#appeal-guide">Guia Prático de Recurso</a></li>
+                        </ul>
+                    </aside>
+                </div>
+
+                <section id="appeal-guide" class="guide-panel card liquid-item stagger-3">
+                    <div class="guide-header">
+                        <span class="guide-badge">Guia prático</span>
+                        <h3>Checklist rápido para um recurso mais convincente</h3>
+                        <p>Antes de enviar sua defesa, valide estes pontos para elevar a consistência jurídica e documental.</p>
+                    </div>
+                    <div class="guide-grid">
+                        <article class="guide-step">
+                            <strong>1. Valide o auto</strong>
+                            <p>Compare placa, data, hora, local, enquadramento e identificação do agente para caçar erros materiais.</p>
+                        </article>
+                        <article class="guide-step">
+                            <strong>2. Reúna prova objetiva</strong>
+                            <p>Fotos, vídeos, protocolos, laudos, recibos e prints são mais fortes do que argumentos abstratos sem lastro.</p>
+                        </article>
+                        <article class="guide-step">
+                            <strong>3. Construa a narrativa</strong>
+                            <p>Explique o fato, mostre a inconsistência do auto e conecte isso ao artigo correto do CTB ou à falha procedimental.</p>
+                        </article>
+                    </div>
+                </section>
+            </section>
+
+            <!-- SUB-SEÇÃO: MEUS RECURSOS (HISTÓRICO) -->
+            <section id="section-recursos" class="sub-secao" style="display: none;">
+                <div class="dashboard-header liquid-item stagger-1">
+                    <h2>Meus Recursos</h2>
+                    <p>Veja todos os recursos que você já gerou e acesse-os novamente.</p>
+                </div>
+
+                <div id="history-section" class="history-panel card liquid-item stagger-2">
+                    <h3>Recursos Gerados</h3>
+                    <div id="history-list" class="history-list">
+                        <p class="history-empty">Faça login para ver seu histórico de recursos.</p>
+                    </div>
+                </div>
+
+                <div class="analysis-actions liquid-item stagger-3">
+                    <button type="button" class="btn-link" onclick="mostrarSubSecao('section-upload')">← Voltar para Upload</button>
+                </div>
+            </section>
+        </section>
