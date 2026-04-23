@@ -23,16 +23,6 @@ The system implements a RAG pipeline to overcome the inherent knowledge cutoff a
 * **Data Handling:** pdfplumber | SQLite | JSON
 * **Frontend:** Vanilla JavaScript | CSS3 (Modern Glassmorphism)
 
-## Project Structure
-
-```text
-├── main.py              # FastAPI core application and RAG logic
-├── organizar_dados.py   # PDF processing and JSON structuring script
-├── database.py          # Persistence layer for user and chat data
-├── static/              # CSS and Client-side JavaScript
-└── templates/           # HTML structure
-```
-
 ## Installation and Deployment
 
 ### Prerequisites
