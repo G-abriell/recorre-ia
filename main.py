@@ -11,6 +11,7 @@ import base64
 import os
 import tempfile
 import re
+import secrets
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 from groq import Groq
@@ -43,17 +44,27 @@ app.add_middleware(
 
 # --- MIDDLEWARE PARA HEADERS DE SEGURANÇA (CSP, XSS, HSTS) ---
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request, call_next):
+    async def dispatch(self, request: Request, call_next):
+        # Geramos um nonce único para esta requisição
+        nonce = secrets.token_urlsafe(16)
+        request.state.csp_nonce = nonce
+        
         response = await call_next(request)
-        # CSP básica: permite scripts do próprio domínio e Google Fonts
+        
+        # 1. HSTS: Obriga o uso de HTTPS por 1 ano (incluindo subdomínios)
+        response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains; preload"
+        
+        # 2. CSP: Substituímos 'unsafe-inline' pelo nonce específico
+        # Isso permite apenas scripts que possuam o atributo 'nonce' correto
         csp = (
             "default-src 'self'; "
-            "script-src 'self' 'unsafe-inline'; "  # 'unsafe-inline' necessário para alguns comportamentos do script.js
+            f"script-src 'self' 'nonce-{nonce}'; " 
             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
             "font-src 'self' https://fonts.gstatic.com; "
-            "img-src 'self' data:; "  # Permite imagens locais e base64 (usado na análise)
+            "img-src 'self' data:; "
             "connect-src 'self';"
         )
+        
         response.headers["Content-Security-Policy"] = csp
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["X-Frame-Options"] = "DENY"
@@ -117,7 +128,12 @@ def get_db():
 
 @app.get("/", response_class=HTMLResponse)
 async def render_index(request: Request):
-    return templates.TemplateResponse(request=request, name="index.html", context={})
+    # Passamos o nonce gerado no middleware para o template
+    return templates.TemplateResponse(
+        request=request, 
+        name="index.html", 
+        context={"nonce": request.state.csp_nonce}
+    )
 
 # --- FUNÇÕES AUXILIARES JWT ---
 def create_password_reset_token(email: str):
