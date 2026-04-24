@@ -315,7 +315,11 @@ document.addEventListener('DOMContentLoaded', () => {
         adicionarMensagem('user', pergunta);
         inputDuvida.value = "";
 
-        const idPensando = adicionarMensagem('ia', '<em>Analisando a sua dúvida...</em>');
+        const idPensando = adicionarMensagem('ia', '');
+        const elementoPensando = document.getElementById(idPensando).querySelector('span');
+        const spanEm = document.createElement("em");
+        spanEm.textContent = "Analisando a sua dúvida...";
+        elementoPensando.appendChild(spanEm);
 
         try {
             const response = await fetch('/chat', {
@@ -349,7 +353,12 @@ document.addEventListener('DOMContentLoaded', () => {
             historicoChat.push({"role": "assistant", "content": respostaDaIA});
             
         } catch (error) {
-            document.getElementById(idPensando).innerHTML = "<span style='color:red;'>Erro de conexão ao tentar responder.</span>";
+            const balaoErro = document.getElementById(idPensando).querySelector('span');
+            balaoErro.textContent = "";
+            const spanErro = document.createElement("span");
+            spanErro.style.color = "red";
+            spanErro.textContent = "Erro de conexão ao tentar responder.";
+            balaoErro.appendChild(spanErro);
         }
     }
 
@@ -456,8 +465,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function adicionarMensagem(remetente, conteudo) {
         const div = document.createElement('div');
         div.className = `chat-message ${remetente}`;
-        div.id = 'msg-' + Date.now() + '-' + Math.random().toString(36).substring(2, 9); 
-        div.innerHTML = conteudo;
+        div.id = 'msg-' + Date.now() + '-' + Math.random().toString(36).substring(2, 9);
+        
+        const textSpan = document.createElement('span');
+        textSpan.textContent = conteudo;
+        div.appendChild(textSpan);
+        
         chatWindow.appendChild(div);
         chatWindow.scrollTop = chatWindow.scrollHeight;
         return div.id;

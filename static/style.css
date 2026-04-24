@@ -1252,6 +1252,11 @@ svg {
     animation: messageIn 260ms ease;
 }
 
+.chat-message span {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
 .chat-message.ia {
     align-self: flex-start;
     border: 1px solid rgba(255, 255, 255, 0.08);
