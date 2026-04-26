@@ -40,7 +40,7 @@ The system implements a RAG pipeline to overcome the inherent knowledge cutoff a
 2. **Environment Setup**
    Install the required dependencies:
    ```bash
-   pip install -r requirements.txt
+   python -m uvicorn main:app --reload
    ```
 
 3. **Data Ingestion**
